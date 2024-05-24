@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:10.5
+    restart: always
+    environment:
+      - POSTGRES_USER=vault
+      - POSTGRES_PASSWORD=Radman101.
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      # copy the sql script to create tables
+      # - ./internal/sql/initdb:/docker-entrypoint-initdb.d
+    command: -p 5432
+    expose:
+      - "5432"
+  prod:
+    build: .
+    restart: always
+    ports:
+      - '8082:8082'
+    env_file:
+      - .env
+    links:
+      - postgres
+    depends_on:
+      - postgres
+  dev:
+    build: .
+    restart: always
+    ports:
+      - '8083:8083'
+    env_file:
+      - .dev.env
+    links:
+      - postgres
+    depends_on:
+      - postgres

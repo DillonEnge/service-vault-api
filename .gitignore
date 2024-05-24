@@ -1,0 +1,7 @@
+postgres_data/
+.cert
+.dev.env
+..env
+.env
+.envrc
+shell.nix
